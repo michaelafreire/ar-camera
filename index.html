@@ -12,6 +12,10 @@
     <main>
       <video id="camera-feed" muted playsinline></video>
       <div id="ui" aria-live="polite">
+        <section id="intro" aria-labelledby="intro-title">
+          <h1 id="intro-title">Welcome to the School of Belonging AR</h1>
+          <p>Use your camera to explore the space around you. Turn to discover each school area, then tap a display to learn more about how it supports belonging.</p>
+        </section>
         <article id="story-card" hidden>
           <h2 id="story-title"></h2>
           <p id="story-text"></p>
@@ -21,6 +25,6 @@
         <button id="enable-direction" type="button" hidden>Enable direction</button>
       </div>
     </main>
-    <script src="sketch.js?v=welcome-copy-1"></script>
+    <script src="sketch.js?v=welcome-overlay-1"></script>
   </body>
 </html>

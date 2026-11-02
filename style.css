@@ -64,6 +64,33 @@ canvas {
   line-height: 1.35;
 }
 
+#intro {
+  position: fixed;
+  top: calc(16vh + env(safe-area-inset-top));
+  left: 24px;
+  right: 24px;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 18px;
+  background: rgb(7 14 24 / 82%);
+  color: white;
+  text-align: center;
+}
+
+#intro h1 {
+  margin: 0 0 12px;
+  color: #ffcc66;
+  font-size: 25px;
+  line-height: 1.15;
+}
+
+#intro p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
 #story-card {
   position: fixed;
   top: calc(20px + env(safe-area-inset-top));

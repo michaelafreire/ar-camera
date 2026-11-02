@@ -12,6 +12,7 @@ let renderedStage = { x: 0, y: 22, z: 0, scale: 0.82, rotation: 0 };
 const startButton = document.querySelector('#start-camera');
 const directionButton = document.querySelector('#enable-direction');
 const statusText = document.querySelector('#status');
+const intro = document.querySelector('#intro');
 const storyCard = document.querySelector('#story-card');
 const storyTitle = document.querySelector('#story-title');
 const storyText = document.querySelector('#story-text');
@@ -125,6 +126,7 @@ async function startCamera() {
 
     cameraReady = true;
     cameraVideo.classList.add('visible');
+    intro.hidden = true;
     startButton.hidden = true;
     directionButton.hidden = false;
     statusText.textContent = 'Enable direction, then turn your body to explore the school.';
