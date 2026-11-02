@@ -291,6 +291,7 @@ function drawGreetingArea() {
   drawReceptionDesk(-78, -48);
   drawPerson(-26, 98, color(246, 135, 183));
   drawPerson(30, 106, color(255, 186, 55));
+  drawWelcomeHeart(76, 58);
 }
 
 function drawArtGardenArea() {
@@ -298,6 +299,7 @@ function drawArtGardenArea() {
   drawArtTable(86, 54);
   drawSharedGarden(-92, 40);
   drawPerson(38, 82, color(255, 186, 55));
+  drawPaintPalette(-6, 24);
 }
 
 function drawSportsArea() {
@@ -305,6 +307,7 @@ function drawSportsArea() {
   drawSportsCourt(82, 58);
   drawPerson(-52, 86, color(246, 135, 183));
   drawPerson(50, 72, color(255, 186, 55));
+  drawSportsGoal(-76, -56);
 }
 
 function drawEnglishArea() {
@@ -312,6 +315,7 @@ function drawEnglishArea() {
   drawReadingNook(-104, 48);
   drawPerson(-24, 88, color(246, 135, 183));
   drawPerson(38, 76, color(255, 186, 55));
+  drawOpenBook(72, 42);
 }
 
 function drawFoodArea() {
@@ -320,6 +324,7 @@ function drawFoodArea() {
   drawFoodStation(94, 54, color(78, 157, 128));
   drawPerson(-42, 92, color(255, 186, 55));
   drawPerson(42, 98, color(246, 135, 183));
+  drawFoodPlate(0, 72);
 }
 
 function drawToiletsArea() {
@@ -327,6 +332,7 @@ function drawToiletsArea() {
   drawToiletBlock(0, -18, color(106, 178, 166));
   drawToiletBlock(92, 58, color(107, 175, 211));
   drawPerson(-40, 92, color(246, 135, 183));
+  drawAccessibleSymbol(0, 74);
 }
 
 function drawSupportArea() {
@@ -334,6 +340,7 @@ function drawSupportArea() {
   drawSupportGarden(-98, 44);
   drawPerson(-32, 92, color(246, 135, 183));
   drawPerson(36, 86, color(255, 186, 55));
+  drawCareSymbol(64, 56);
 }
 
 function drawOpenGreenArea() {
@@ -342,6 +349,7 @@ function drawOpenGreenArea() {
   drawPicnicBench(102, 46);
   drawPerson(-38, 94, color(246, 135, 183));
   drawPerson(38, 86, color(255, 186, 55));
+  drawLeafSymbol(0, 62);
 }
 
 function drawCampusBase() {
@@ -570,6 +578,124 @@ function drawPicnicBench(x, z) {
   box(58, 8, 8);
   translate(0, 0, 32);
   box(58, 8, 8);
+  pop();
+}
+
+function drawWelcomeHeart(x, z) {
+  push();
+  translate(x, -48, z);
+  fill(246, 135, 183);
+  sphere(13, 12, 8);
+  translate(18, 0, 0);
+  sphere(13, 12, 8);
+  translate(-9, 16, 0);
+  rotateZ(PI);
+  cone(20, 24, 4, 1);
+  pop();
+}
+
+function drawPaintPalette(x, z) {
+  push();
+  translate(x, -17, z);
+  fill(246, 193, 73);
+  ellipsoid(28, 6, 20, 16, 8);
+  fill(246, 110, 121);
+  translate(-9, -5, -4);
+  sphere(5, 10, 8);
+  fill(76, 161, 188);
+  translate(16, 0, 3);
+  sphere(5, 10, 8);
+  fill(94, 180, 158);
+  translate(-3, 0, 11);
+  sphere(5, 10, 8);
+  pop();
+}
+
+function drawSportsGoal(x, z) {
+  push();
+  translate(x, -25, z);
+  fill(255);
+  box(52, 4, 4);
+  translate(-24, 18, 0);
+  box(4, 40, 4);
+  translate(48, 0, 0);
+  box(4, 40, 4);
+  fill(250, 211, 92);
+  translate(-24, 2, 11);
+  sphere(9, 12, 8);
+  pop();
+}
+
+function drawOpenBook(x, z) {
+  push();
+  translate(x, -20, z);
+  fill(255, 248, 225);
+  rotateY(-0.2);
+  box(30, 7, 22);
+  translate(31, 0, 0);
+  rotateY(0.4);
+  box(30, 7, 22);
+  fill(80, 137, 196);
+  translate(-16, -5, -12);
+  box(4, 2, 9);
+  translate(31, 0, 0);
+  box(4, 2, 9);
+  pop();
+}
+
+function drawFoodPlate(x, z) {
+  push();
+  translate(x, -14, z);
+  fill(255, 246, 218);
+  cylinder(25, 4, 24, 1);
+  fill(237, 166, 62);
+  translate(0, -5, 0);
+  sphere(10, 12, 8);
+  fill(78, 157, 128);
+  translate(12, 0, 5);
+  sphere(7, 12, 8);
+  pop();
+}
+
+function drawAccessibleSymbol(x, z) {
+  push();
+  translate(x, -32, z);
+  fill(35, 112, 187);
+  cylinder(19, 5, 24, 1);
+  translate(0, -18, 0);
+  sphere(7, 12, 8);
+  translate(9, 17, 0);
+  box(28, 5, 5);
+  translate(11, 11, 0);
+  box(5, 24, 5);
+  pop();
+}
+
+function drawCareSymbol(x, z) {
+  push();
+  translate(x, -34, z);
+  fill(246, 135, 183);
+  sphere(11, 12, 8);
+  translate(15, 0, 0);
+  sphere(11, 12, 8);
+  translate(-8, 14, 0);
+  rotateZ(PI);
+  cone(17, 22, 4, 1);
+  fill(255, 186, 55);
+  translate(-8, -17, 10);
+  sphere(6, 10, 8);
+  pop();
+}
+
+function drawLeafSymbol(x, z) {
+  push();
+  translate(x, -28, z);
+  rotateZ(-0.5);
+  fill(151, 196, 104);
+  ellipsoid(17, 30, 6, 14, 8);
+  fill(72, 151, 98);
+  translate(0, -3, 7);
+  box(3, 34, 3);
   pop();
 }
 
