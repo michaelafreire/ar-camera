@@ -4,6 +4,8 @@ let cameraRequestActive = false;
 let directionRequestActive = false;
 let directionEnabled = false;
 let referenceHeading;
+let currentHeading;
+let storyHeading;
 let activeScene = 0;
 
 const startButton = document.querySelector('#start-camera');
@@ -165,13 +167,26 @@ function updateDirection(event) {
     referenceHeading = heading;
   }
 
+  currentHeading = heading;
+
+  if (!storyCard.hidden && storyHeading !== undefined
+    && headingDifference(currentHeading, storyHeading) > 12) {
+    dismissStory();
+  }
+
   const relativeHeading = (heading - referenceHeading + 360) % 360;
   const nextScene = Math.floor((relativeHeading + 45) / 90) % 4;
 
   if (nextScene !== activeScene) {
     activeScene = nextScene;
+    dismissStory();
     statusText.textContent = sceneInstructions[activeScene];
   }
+}
+
+function headingDifference(firstHeading, secondHeading) {
+  const difference = Math.abs(firstHeading - secondHeading) % 360;
+  return difference > 180 ? 360 - difference : difference;
 }
 
 function handleModelTap(event) {
@@ -200,12 +215,22 @@ function presentStory(storyKey) {
   storyTitle.textContent = story.title;
   storyText.textContent = story.text;
   storyCard.hidden = false;
+  storyHeading = currentHeading;
 
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
     const narration = new SpeechSynthesisUtterance(`${story.title}. ${story.text}`);
     narration.rate = 0.92;
     window.speechSynthesis.speak(narration);
+  }
+}
+
+function dismissStory() {
+  storyCard.hidden = true;
+  storyHeading = undefined;
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
   }
 }
 
