@@ -237,11 +237,13 @@ function drawWelcome() {
   push();
   fill(255);
   textAlign(CENTER, CENTER);
-  textSize(26);
-  text('Camera model viewer', 0, -38);
+  textSize(25);
+  text('Welcome to the School of Belonging AR', 0, -68);
   fill(190, 205, 230);
-  textSize(15);
-  text('Open the camera to place the model.', 0, 4);
+  textSize(16);
+  text('Use your camera to explore the space around you.', 0, -20);
+  text('Turn to discover each school area, then tap a display', 0, 12);
+  text('to learn more about how it supports belonging.', 0, 38);
   pop();
 }
 
