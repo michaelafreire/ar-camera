@@ -1,110 +1,13 @@
-:root {
-  color-scheme: dark;
-  font-family: Arial, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body,
-main {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  background: #08101d;
-}
-
-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  display: block;
-}
-
-#camera-feed {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  display: none;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #08101d;
-}
-
-#camera-feed.visible {
-  display: block;
-}
-
-#ui {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 16px;
-  padding: 24px 24px calc(28px + env(safe-area-inset-bottom));
-  pointer-events: none;
-}
-
-#status {
-  max-width: 360px;
-  margin: 0;
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: rgb(0 0 0 / 55%);
-  color: white;
-  text-align: center;
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-#story-card {
-  position: fixed;
-  top: calc(20px + env(safe-area-inset-top));
-  left: 20px;
-  right: 20px;
-  max-width: 390px;
-  margin: 0 auto;
-  padding: 16px;
-  border-radius: 16px;
-  background: rgb(0 0 0 / 68%);
-  color: white;
-}
-
-#story-card h2 {
-  margin: 0 0 6px;
-  color: #ffcc66;
-  font-size: 18px;
-}
-
-#story-card p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-#start-camera,
-#enable-direction {
-  pointer-events: auto;
-  touch-action: manipulation;
-  border: 0;
-  border-radius: 999px;
-  padding: 15px 22px;
-  background: #ff4f87;
-  color: white;
-  font: inherit;
-  font-size: 16px;
-  font-weight: 700;
-  box-shadow: 0 8px 26px rgb(0 0 0 / 35%);
-}
-
-#start-camera:disabled,
-#enable-direction:disabled {
-  opacity: 0.7;
-}
+:root { color-scheme: dark; font-family: Arial, sans-serif; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #08101d; }
+#loader, #marker-help, #story-card, #status { position: fixed; z-index: 10; border-radius: 14px; background: rgb(0 0 0 / 72%); color: #fff; }
+#loader { inset: 0; display: grid; place-content: center; gap: 10px; padding: 30px; text-align: center; border-radius: 0; }
+#loader strong { font-size: 24px; color: #ffcc66; }
+#marker-help { left: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); padding: 12px; display: grid; gap: 5px; }
+#marker-help a { color: #ffcc66; font-weight: 700; }
+#story-card { top: calc(16px + env(safe-area-inset-top)); left: 16px; right: 16px; max-width: 420px; margin: auto; padding: 16px; }
+#story-card h2 { margin: 0 0 6px; color: #ffcc66; font-size: 19px; }
+#story-card p { margin: 0; font-size: 14px; line-height: 1.4; }
+#status { right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); max-width: 220px; margin: 0; padding: 10px 12px; font-size: 13px; text-align: right; }
+.a-canvas { position: fixed !important; inset: 0 !important; }
