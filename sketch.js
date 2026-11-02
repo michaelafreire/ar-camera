@@ -14,8 +14,6 @@ const sceneNames = ['Welcome', 'Learning', 'Community', 'Garden'];
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
 startButton.addEventListener('touchend', beginCameraRequest, { passive: false });
 startButton.addEventListener('click', beginCameraRequest);
-directionButton.addEventListener('pointerdown', beginDirectionRequest, { passive: false });
-directionButton.addEventListener('touchend', beginDirectionRequest, { passive: false });
 directionButton.addEventListener('click', beginDirectionRequest);
 
 function beginCameraRequest(event) {
@@ -104,6 +102,7 @@ function beginDirectionRequest(event) {
 async function enableDirection() {
   directionButton.disabled = true;
   directionButton.textContent = 'Enabling direction…';
+  statusText.textContent = 'Allow Motion & Orientation in the iPhone permission prompt.';
 
   try {
     if (typeof DeviceOrientationEvent !== 'undefined'
