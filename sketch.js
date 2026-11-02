@@ -7,6 +7,7 @@ let referenceHeading;
 let currentHeading;
 let storyHeading;
 let activeScene = 0;
+let renderedStage = { x: 0, y: 22, z: 0, scale: 0.82, rotation: 0 };
 
 const startButton = document.querySelector('#start-camera');
 const directionButton = document.querySelector('#enable-direction');
@@ -47,6 +48,17 @@ const areas = [
     title: 'Open Green Space',
     text: 'Open green space gives friends a place to hang out, relax, talk, and belong together.'
   }
+];
+
+const sceneStaging = [
+  { x: -70, y: 78, z: 170, scale: 1.06, rotation: -0.1 },
+  { x: -150, y: -84, z: -210, scale: 0.54, rotation: 0.16 },
+  { x: 155, y: -102, z: -270, scale: 0.45, rotation: -0.18 },
+  { x: 110, y: -34, z: -75, scale: 0.7, rotation: -0.12 },
+  { x: -128, y: 68, z: 105, scale: 0.98, rotation: 0.11 },
+  { x: 142, y: 42, z: 28, scale: 0.82, rotation: -0.08 },
+  { x: -102, y: 5, z: 55, scale: 0.86, rotation: 0.14 },
+  { x: 42, y: -48, z: -135, scale: 0.63, rotation: -0.14 }
 ];
 
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
@@ -234,15 +246,21 @@ function drawWelcome() {
 }
 
 function drawModel() {
+  const targetStage = sceneStaging[activeScene];
+  renderedStage.x = lerp(renderedStage.x, targetStage.x, 0.09);
+  renderedStage.y = lerp(renderedStage.y, targetStage.y, 0.09);
+  renderedStage.z = lerp(renderedStage.z, targetStage.z, 0.09);
+  renderedStage.scale = lerp(renderedStage.scale, targetStage.scale, 0.09);
+  renderedStage.rotation = lerp(renderedStage.rotation, targetStage.rotation, 0.09);
+
   push();
-  translate(0, 22, 0);
-  scale(0.82);
+  translate(renderedStage.x, renderedStage.y, renderedStage.z);
+  scale(renderedStage.scale);
   rotateX(-0.12);
+  rotateY(renderedStage.rotation);
   noStroke();
   ambientLight(155);
   directionalLight(255, 220, 235, -0.5, -0.8, -1);
-
-  drawCampusBase();
 
   drawAreaScene(activeScene);
   pop();
