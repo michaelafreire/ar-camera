@@ -18,6 +18,24 @@ main {
 }
 
 canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: block;
+}
+
+#camera-feed {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #08101d;
+}
+
+#camera-feed.visible {
   display: block;
 }
 

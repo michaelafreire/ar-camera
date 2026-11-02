@@ -1,4 +1,4 @@
-let cameraVideo;
+let cameraVideo = document.querySelector('#camera-feed');
 let cameraReady = false;
 let modelX = 0;
 let modelY = 18;
@@ -32,14 +32,13 @@ function setup() {
 }
 
 function draw() {
-  background(8, 16, 29);
-
   if (!cameraReady) {
+    background(8, 16, 29);
     drawWelcome();
     return;
   }
 
-  drawCamera();
+  clear();
   drawModel();
   drawLabel();
 }
@@ -64,7 +63,6 @@ async function startCamera() {
       audio: false
     });
 
-    cameraVideo = document.createElement('video');
     cameraVideo.autoplay = true;
     cameraVideo.muted = true;
     cameraVideo.playsInline = true;
@@ -72,6 +70,7 @@ async function startCamera() {
     await cameraVideo.play();
 
     cameraReady = true;
+    cameraVideo.classList.add('visible');
     startButton.hidden = true;
     statusText.textContent = 'Tap anywhere to move the model.';
   } catch (error) {
@@ -92,27 +91,6 @@ function drawWelcome() {
   fill(190, 205, 230);
   textSize(15);
   text('Open the camera to place the model.', 0, 4);
-  pop();
-}
-
-function drawCamera() {
-  const videoWidth = cameraVideo.videoWidth || 16;
-  const videoHeight = cameraVideo.videoHeight || 9;
-  const videoRatio = videoWidth / videoHeight;
-  const screenRatio = width / height;
-  let renderWidth = width;
-  let renderHeight = height;
-
-  if (videoRatio > screenRatio) {
-    renderWidth = height * videoRatio;
-  } else {
-    renderHeight = width / videoRatio;
-  }
-
-  push();
-  translate(0, 0, -500);
-  imageMode(CENTER);
-  image(cameraVideo, 0, 0, renderWidth, renderHeight);
   pop();
 }
 
