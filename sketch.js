@@ -14,29 +14,40 @@ const statusText = document.querySelector('#status');
 const storyCard = document.querySelector('#story-card');
 const storyTitle = document.querySelector('#story-title');
 const storyText = document.querySelector('#story-text');
-const sceneNames = ['Welcome', 'Learning', 'Community', 'Garden'];
-const stories = {
-  welcome: {
-    title: 'Welcome',
-    text: 'The entrance makes belonging visible from the first moment: every learner is greeted, noticed, and invited in.'
+const areas = [
+  {
+    title: 'Greeting, Friendly Staff',
+    text: 'Friendly staff welcome every student, learn their name, and help them feel safe from the moment they arrive.'
   },
-  garden: {
-    title: 'Wellbeing Garden',
-    text: 'The garden is a calm shared space for conversation, reflection, play, and connection with nature.'
+  {
+    title: 'Art, DT & Gardening',
+    text: 'Creative making, design technology, and gardening give students practical ways to express ideas and build confidence.'
   },
-  learning: {
-    title: 'Learning Together',
-    text: 'These flexible learning studios support collaboration, creativity, and many different ways to learn.'
+  {
+    title: 'Sports & Swimming Pool',
+    text: 'Inclusive sports and swimming offer movement, teamwork, fun, and different ways to take part.'
   },
-  community: {
-    title: 'Community Circle',
-    text: 'The circle gives every person a place to listen, speak, make decisions, and feel part of the school.'
+  {
+    title: 'English with Supportive Teachers',
+    text: 'A calm English classroom with kind teachers helps every student develop their voice, reading, and communication.'
   },
-  participation: {
-    title: 'Everyone Takes Part',
-    text: 'The colourful figures represent learners, families, and staff shaping school life together.'
+  {
+    title: 'Food Stations',
+    text: 'Several affordable food stations spread around the school give students quick, simple access to food.'
+  },
+  {
+    title: 'Clean, Accessible Toilets',
+    text: 'Clean and accessible toilets are placed throughout the school so everyone can use them comfortably and independently.'
+  },
+  {
+    title: 'Support Hub',
+    text: 'The support hub is a mindful, low-stimulation space with helpful staff, including support for autistic students.'
+  },
+  {
+    title: 'Open Green Space',
+    text: 'Open green space gives friends a place to hang out, relax, talk, and belong together.'
   }
-};
+];
 
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
 startButton.addEventListener('touchend', beginCameraRequest, { passive: false });
@@ -144,7 +155,7 @@ async function enableDirection() {
     window.addEventListener('deviceorientation', updateDirection, true);
     directionEnabled = true;
     directionButton.hidden = true;
-    statusText.textContent = 'Turn to explore, then tap a coloured part of the model to hear its story.';
+    statusText.textContent = 'Turn to explore the eight areas, then tap the drawing to hear its story.';
   } catch (error) {
     directionButton.disabled = false;
     directionButton.textContent = 'Try direction again';
@@ -175,12 +186,12 @@ function updateDirection(event) {
   }
 
   const relativeHeading = (heading - referenceHeading + 360) % 360;
-  const nextScene = Math.floor((relativeHeading + 45) / 90) % 4;
+  const nextScene = Math.floor((relativeHeading + 22.5) / 45) % areas.length;
 
   if (nextScene !== activeScene) {
     activeScene = nextScene;
     dismissStory();
-    statusText.textContent = sceneInstructions[activeScene];
+    statusText.textContent = 'Tap the drawing when you are ready to hear about this area.';
   }
 }
 
@@ -194,32 +205,19 @@ function handleModelTap(event) {
     return;
   }
 
-  const horizontalPosition = event.clientX / window.innerWidth;
-  let storyKey = 'welcome';
-
-  if (activeScene === 0) {
-    storyKey = horizontalPosition < 0.4 ? 'garden' : 'welcome';
-  } else if (activeScene === 1) {
-    storyKey = horizontalPosition > 0.7 ? 'participation' : 'learning';
-  } else if (activeScene === 2) {
-    storyKey = horizontalPosition < 0.28 || horizontalPosition > 0.72 ? 'participation' : 'community';
-  } else {
-    storyKey = horizontalPosition > 0.68 ? 'welcome' : 'garden';
-  }
-
-  presentStory(storyKey);
+  presentStory(activeScene);
 }
 
-function presentStory(storyKey) {
-  const story = stories[storyKey];
-  storyTitle.textContent = story.title;
-  storyText.textContent = story.text;
+function presentStory(areaIndex) {
+  const area = areas[areaIndex];
+  storyTitle.textContent = area.title;
+  storyText.textContent = area.text;
   storyCard.hidden = false;
   storyHeading = currentHeading;
 
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
-    const narration = new SpeechSynthesisUtterance(`${story.title}. ${story.text}`);
+    const narration = new SpeechSynthesisUtterance(`${area.title}. ${area.text}`);
     narration.rate = 0.92;
     window.speechSynthesis.speak(narration);
   }
@@ -233,13 +231,6 @@ function dismissStory() {
     window.speechSynthesis.cancel();
   }
 }
-
-const sceneInstructions = [
-  'Welcome: face your starting direction.',
-  'Learning: turn right to see shared learning spaces.',
-  'Community: turn around to see the community circle.',
-  'Garden: turn left to see the wellbeing garden.'
-];
 
 function drawWelcome() {
   push();
@@ -256,7 +247,7 @@ function drawWelcome() {
 function drawModel() {
   push();
   translate(0, 22, 0);
-  scale(0.88);
+  scale(0.82);
   rotateX(-0.12);
   noStroke();
   ambientLight(155);
@@ -264,60 +255,96 @@ function drawModel() {
 
   drawCampusBase();
 
-  if (activeScene === 0) {
-    drawWelcomeScene();
-  } else if (activeScene === 1) {
-    drawLearningScene();
-  } else if (activeScene === 2) {
-    drawCommunityScene();
-  } else {
-    drawGardenScene();
-  }
+  drawAreaScene(activeScene);
   pop();
 }
 
-function drawWelcomeScene() {
-  drawWelcomeGate(0, 78);
-  drawSharedGarden(-106, -54);
-  drawReadingNook(94, -45);
-  drawPerson(-28, 66, color(255, 186, 55));
-  drawPerson(30, 72, color(246, 135, 183));
+function drawAreaScene(areaIndex) {
+  if (areaIndex === 0) {
+    drawGreetingArea();
+  } else if (areaIndex === 1) {
+    drawArtGardenArea();
+  } else if (areaIndex === 2) {
+    drawSportsArea();
+  } else if (areaIndex === 3) {
+    drawEnglishArea();
+  } else if (areaIndex === 4) {
+    drawFoodArea();
+  } else if (areaIndex === 5) {
+    drawToiletsArea();
+  } else if (areaIndex === 6) {
+    drawSupportArea();
+  } else {
+    drawOpenGreenArea();
+  }
 }
 
-function drawLearningScene() {
-  drawLearningStudio(0, -72, 132, 70, 46, color(62, 131, 190));
-  drawReadingNook(-104, 48);
-  drawCommunityCircle(86, 58);
-  drawPerson(-44, 78, color(255, 186, 55));
-  drawPerson(8, 88, color(246, 135, 183));
+function drawGreetingArea() {
+  drawWelcomeGate(0, 118);
+  drawReceptionDesk(-78, -48);
+  drawPerson(-26, 98, color(246, 135, 183));
+  drawPerson(30, 106, color(255, 186, 55));
+}
+
+function drawArtGardenArea() {
+  drawLearningStudio(-28, -116, 122, 66, 42, color(94, 180, 158));
+  drawArtTable(86, 54);
+  drawSharedGarden(-92, 40);
+  drawPerson(38, 82, color(255, 186, 55));
+}
+
+function drawSportsArea() {
+  drawPool(0, -98);
+  drawSportsCourt(82, 58);
+  drawPerson(-52, 86, color(246, 135, 183));
   drawPerson(50, 72, color(255, 186, 55));
 }
 
-function drawCommunityScene() {
-  drawLearningStudio(0, -96, 112, 34, 24, color(156, 60, 98));
-  drawQuietPod(-105, -42);
-  drawCommunityCircle(0, 24);
-  drawPerson(-62, 86, color(246, 135, 183));
-  drawPerson(62, 86, color(255, 186, 55));
+function drawEnglishArea() {
+  drawLearningStudio(0, -100, 138, 72, 48, color(80, 137, 196));
+  drawReadingNook(-104, 48);
+  drawPerson(-24, 88, color(246, 135, 183));
+  drawPerson(38, 76, color(255, 186, 55));
 }
 
-function drawGardenScene() {
-  drawQuietPod(98, -58);
-  drawSharedGarden(0, -12);
-  drawPond(-112, 32);
-  drawWelcomeGate(114, 76);
-  drawPerson(-50, 84, color(255, 186, 55));
-  drawPerson(48, 64, color(246, 135, 183));
+function drawFoodArea() {
+  drawFoodStation(-94, -76, color(237, 166, 62));
+  drawFoodStation(0, -16, color(214, 92, 109));
+  drawFoodStation(94, 54, color(78, 157, 128));
+  drawPerson(-42, 92, color(255, 186, 55));
+  drawPerson(42, 98, color(246, 135, 183));
+}
+
+function drawToiletsArea() {
+  drawToiletBlock(-92, -90, color(107, 175, 211));
+  drawToiletBlock(0, -18, color(106, 178, 166));
+  drawToiletBlock(92, 58, color(107, 175, 211));
+  drawPerson(-40, 92, color(246, 135, 183));
+}
+
+function drawSupportArea() {
+  drawQuietPod(0, -54);
+  drawSupportGarden(-98, 44);
+  drawPerson(-32, 92, color(246, 135, 183));
+  drawPerson(36, 86, color(255, 186, 55));
+}
+
+function drawOpenGreenArea() {
+  drawSharedGarden(0, -22);
+  drawPicnicBench(-102, 62);
+  drawPicnicBench(102, 46);
+  drawPerson(-38, 94, color(246, 135, 183));
+  drawPerson(38, 86, color(255, 186, 55));
 }
 
 function drawCampusBase() {
   push();
   fill(248, 245, 235);
-  box(330, 10, 245);
+  box(400, 10, 340);
 
   fill(221, 217, 202);
-  translate(0, -7, 42);
-  box(270, 2, 18);
+  translate(0, -7, 58);
+  box(330, 2, 18);
   pop();
 }
 
@@ -429,6 +456,116 @@ function drawPond(x, z) {
   pop();
 }
 
+function drawReceptionDesk(x, z) {
+  push();
+  translate(x, -20, z);
+  fill(202, 157, 97);
+  box(62, 28, 20);
+  fill(255, 244, 191);
+  translate(0, -18, -3);
+  box(54, 8, 4);
+  pop();
+}
+
+function drawArtTable(x, z) {
+  push();
+  translate(x, -18, z);
+  fill(228, 175, 78);
+  box(52, 24, 36);
+  fill(247, 106, 121);
+  translate(-14, -16, 0);
+  cylinder(7, 6, 12, 1);
+  fill(76, 161, 188);
+  translate(28, 0, 0);
+  cylinder(7, 6, 12, 1);
+  pop();
+}
+
+function drawPool(x, z) {
+  push();
+  translate(x, -8, z);
+  fill(238, 245, 244);
+  box(138, 8, 76);
+  fill(70, 177, 213);
+  translate(0, -6, 0);
+  box(122, 3, 60);
+  fill(255);
+  translate(0, -4, 0);
+  box(4, 2, 56);
+  pop();
+}
+
+function drawSportsCourt(x, z) {
+  push();
+  translate(x, -8, z);
+  fill(211, 92, 103);
+  box(86, 5, 62);
+  fill(255);
+  translate(0, -4, 0);
+  box(4, 2, 52);
+  fill(250, 211, 92);
+  translate(-21, -10, 0);
+  sphere(9, 12, 8);
+  pop();
+}
+
+function drawFoodStation(x, z, stationColor) {
+  push();
+  translate(x, -23, z);
+  fill(stationColor);
+  box(60, 34, 28);
+  fill(255, 246, 218);
+  translate(0, -22, 0);
+  box(68, 10, 34);
+  fill(123, 80, 48);
+  translate(-15, -8, -17);
+  box(9, 9, 4);
+  translate(30, 0, 0);
+  box(9, 9, 4);
+  pop();
+}
+
+function drawToiletBlock(x, z, blockColor) {
+  push();
+  translate(x, -25, z);
+  fill(blockColor);
+  box(70, 42, 38);
+  fill(250);
+  translate(-18, 3, -21);
+  box(20, 28, 3);
+  translate(36, 0, 0);
+  box(20, 28, 3);
+  fill(245, 201, 84);
+  translate(0, -29, -21);
+  cylinder(6, 3, 16, 1);
+  pop();
+}
+
+function drawSupportGarden(x, z) {
+  push();
+  translate(x, -8, z);
+  fill(157, 202, 130);
+  box(82, 5, 60);
+  drawTree(-23, -12, 12, color(114, 177, 102));
+  drawTree(24, 13, 10, color(151, 196, 104));
+  fill(242, 200, 90);
+  translate(0, -6, 0);
+  cylinder(16, 4, 20, 1);
+  pop();
+}
+
+function drawPicnicBench(x, z) {
+  push();
+  translate(x, -15, z);
+  fill(180, 126, 72);
+  box(58, 9, 18);
+  translate(0, 12, -16);
+  box(58, 8, 8);
+  translate(0, 0, 32);
+  box(58, 8, 8);
+  pop();
+}
+
 function drawTree(x, z, size, leafColor) {
   push();
   translate(x, -12, z);
@@ -478,7 +615,7 @@ function drawLabel() {
   rect(12, 12, 245, 34, 8);
   fill(255);
   textSize(14);
-  text(`School journey: ${sceneNames[activeScene]}`, 24, 34);
+  text('School of Belonging: turn and tap', 24, 34);
   pop();
 }
 
