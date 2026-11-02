@@ -7,6 +7,9 @@ let referenceHeading;
 let currentHeading;
 let storyHeading;
 let activeScene = 0;
+let relativeHeading = 0;
+let parallaxX = 0;
+let parallaxY = 0;
 
 const startButton = document.querySelector('#start-camera');
 const directionButton = document.querySelector('#enable-direction');
@@ -47,6 +50,17 @@ const areas = [
     title: 'Open Green Space',
     text: 'Open green space gives friends a place to hang out, relax, talk, and belong together.'
   }
+];
+
+const campusLayout = [
+  { draw: drawGreetingArea, x: 0, z: 270, scale: 0.62 },
+  { draw: drawFoodArea, x: -190, z: 125, scale: 0.52 },
+  { draw: drawToiletsArea, x: 210, z: 105, scale: 0.45 },
+  { draw: drawSupportArea, x: -250, z: -10, scale: 0.38 },
+  { draw: drawOpenGreenArea, x: -15, z: -105, scale: 0.35 },
+  { draw: drawEnglishArea, x: 220, z: -175, scale: 0.31 },
+  { draw: drawArtGardenArea, x: -250, z: -225, scale: 0.27 },
+  { draw: drawSportsArea, x: 85, z: -350, scale: 0.21 }
 ];
 
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
@@ -185,7 +199,9 @@ function updateDirection(event) {
     dismissStory();
   }
 
-  const relativeHeading = (heading - referenceHeading + 360) % 360;
+  relativeHeading = (heading - referenceHeading + 360) % 360;
+  parallaxX = constrain(Number.isFinite(event.gamma) ? event.gamma : 0, -25, 25);
+  parallaxY = constrain(Number.isFinite(event.beta) ? event.beta - 45 : 0, -20, 20);
   const nextScene = Math.floor((relativeHeading + 22.5) / 45) % areas.length;
 
   if (nextScene !== activeScene) {
@@ -235,36 +251,26 @@ function drawWelcome() {
 
 function drawModel() {
   push();
-  translate(0, 22, 0);
-  scale(0.82);
-  rotateX(-0.12);
+  translate(parallaxX * 0.9, 28 + parallaxY * 0.55, 0);
+  scale(0.76);
+  rotateX(-0.18 + parallaxY * 0.002);
+  rotateY(-radians(relativeHeading));
   noStroke();
   ambientLight(155);
   directionalLight(255, 220, 235, -0.5, -0.8, -1);
 
   drawCampusBase();
-
-  drawAreaScene(activeScene);
+  drawContinuousCampus();
   pop();
 }
 
-function drawAreaScene(areaIndex) {
-  if (areaIndex === 0) {
-    drawGreetingArea();
-  } else if (areaIndex === 1) {
-    drawArtGardenArea();
-  } else if (areaIndex === 2) {
-    drawSportsArea();
-  } else if (areaIndex === 3) {
-    drawEnglishArea();
-  } else if (areaIndex === 4) {
-    drawFoodArea();
-  } else if (areaIndex === 5) {
-    drawToiletsArea();
-  } else if (areaIndex === 6) {
-    drawSupportArea();
-  } else {
-    drawOpenGreenArea();
+function drawContinuousCampus() {
+  for (const area of campusLayout) {
+    push();
+    translate(area.x, 0, area.z);
+    scale(area.scale);
+    area.draw();
+    pop();
   }
 }
 
@@ -329,11 +335,17 @@ function drawOpenGreenArea() {
 function drawCampusBase() {
   push();
   fill(248, 245, 235);
-  box(400, 10, 340);
+  box(820, 10, 760);
 
   fill(221, 217, 202);
-  translate(0, -7, 58);
-  box(330, 2, 18);
+  translate(0, -7, 110);
+  box(680, 2, 22);
+
+  fill(229, 225, 210);
+  translate(-150, 0, -180);
+  box(18, 2, 490);
+  translate(300, 0, 45);
+  box(18, 2, 400);
   pop();
 }
 
