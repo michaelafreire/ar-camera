@@ -95,7 +95,6 @@ function draw() {
 
   clear();
   drawModel();
-  drawLabel();
 }
 
 async function startCamera() {
@@ -740,19 +739,6 @@ function drawPerson(x, z, personColor) {
   cylinder(3, 16, 8, 1);
   translate(0, -13, 0);
   sphere(5, 10, 8);
-  pop();
-}
-
-function drawLabel() {
-  push();
-  resetMatrix();
-  translate(-width / 2, -height / 2);
-  noStroke();
-  fill(0, 120);
-  rect(12, 12, 245, 34, 8);
-  fill(255);
-  textSize(14);
-  text('School of Belonging: turn and tap', 24, 34);
   pop();
 }
 
