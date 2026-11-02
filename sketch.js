@@ -3,11 +3,26 @@ let cameraReady = false;
 let modelX = 0;
 let modelY = 18;
 let modelScale = 1;
+let cameraRequestActive = false;
 
 const startButton = document.querySelector('#start-camera');
 const statusText = document.querySelector('#status');
 
-startButton.addEventListener('click', startCamera);
+startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
+startButton.addEventListener('click', beginCameraRequest);
+
+function beginCameraRequest(event) {
+  event.preventDefault();
+
+  if (cameraRequestActive || cameraReady) {
+    return;
+  }
+
+  cameraRequestActive = true;
+  startCamera().finally(() => {
+    cameraRequestActive = false;
+  });
+}
 
 function setup() {
   pixelDensity(1);
