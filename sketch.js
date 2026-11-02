@@ -214,22 +214,11 @@ function presentStory(areaIndex) {
   storyText.textContent = area.text;
   storyCard.hidden = false;
   storyHeading = currentHeading;
-
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const narration = new SpeechSynthesisUtterance(`${area.title}. ${area.text}`);
-    narration.rate = 0.92;
-    window.speechSynthesis.speak(narration);
-  }
 }
 
 function dismissStory() {
   storyCard.hidden = true;
   storyHeading = undefined;
-
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
 }
 
 function drawWelcome() {
