@@ -4,46 +4,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#08101d" />
-    <title>School of Belonging AR</title>
+    <title>AR Camera Model</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.7/aframe/build/aframe-ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
   </head>
   <body>
-    <div id="loader"><strong>School of Belonging AR</strong><span>Allow camera access, then point at the printed marker.</span></div>
-    <aside id="marker-help"><strong>Need the marker?</strong><a href="marker.html" target="_blank" rel="noreferrer">Open and print it</a></aside>
-    <article id="story-card" hidden aria-live="polite"><h2 id="story-title"></h2><p id="story-text"></p></article>
-    <p id="status" aria-live="polite">Point the camera at the printed marker.</p>
-
-    <a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true; logarithmicDepthBuffer: true" arjs="sourceType: webcam; detectionMode: mono; debugUIEnabled: false;">
-      <a-marker id="school-marker" preset="hiro" size="0.18" emitevents="true" smooth="true" smooth-count="10" smooth-tolerance="0.01" smooth-threshold="5">
-        <a-entity class="area clickable" data-area="greeting" position="0 0.1 1.35" geometry="primitive: sphere; radius: 0.55" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-plane rotation="-90 0 0" width="1.3" height="0.75" color="#f7f2df"></a-plane><a-box position="-0.32 0.34 0" width="0.08" height="0.68" depth="0.08" color="#c99d60"></a-box><a-box position="0.32 0.34 0" width="0.08" height="0.68" depth="0.08" color="#c99d60"></a-box><a-box position="0 0.67 0" width="0.82" height="0.11" depth="0.1" color="#c99d60"></a-box><a-sphere position="-0.13 0.18 0.13" radius="0.08" color="#f68ab7"></a-sphere><a-sphere position="0.14 0.18 0.13" radius="0.08" color="#f6ba37"></a-sphere>
-        </a-entity>
-        <a-entity class="area clickable" data-area="art" position="-1.4 0 -1.65" geometry="primitive: sphere; radius: 0.65" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-plane rotation="-90 0 0" width="1.45" height="1" color="#5eb49e"></a-plane><a-box position="0 0.28 -0.1" width="0.94" height="0.48" depth="0.54" color="#5eb49e"></a-box><a-box position="0.58 0.14 0.32" width="0.52" height="0.24" depth="0.36" color="#e4af4e"></a-box><a-sphere position="-0.53 0.16 0.27" radius="0.19" color="#9acd62"></a-sphere><a-sphere position="-0.28 0.16 0.35" radius="0.15" color="#459762"></a-sphere>
-        </a-entity>
-        <a-entity class="area clickable" data-area="sports" position="1.8 0 -2.45" geometry="primitive: sphere; radius: 0.8" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-box position="0 0.03 0" width="1.55" height="0.08" depth="0.9" color="#f5f1e6"></a-box><a-box position="-0.28 0.09 0" width="0.9" height="0.04" depth="0.64" color="#48b0d4"></a-box><a-box position="-0.28 0.12 0" width="0.03" height="0.02" depth="0.6" color="#ffffff"></a-box><a-box position="0.58 0.08 0" width="0.5" height="0.05" depth="0.68" color="#d65e6d"></a-box><a-sphere position="0.58 0.2 0" radius="0.12" color="#f6d35c"></a-sphere>
-        </a-entity>
-        <a-entity class="area clickable" data-area="english" position="1.35 0 -0.7" geometry="primitive: sphere; radius: 0.65" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-box position="0 0.28 0" width="1.22" height="0.54" depth="0.7" color="#5089c4"></a-box><a-box position="-0.35 0.3 0.36" width="0.25" height="0.2" depth="0.03" color="#ffffff"></a-box><a-box position="0.35 0.3 0.36" width="0.25" height="0.2" depth="0.03" color="#ffffff"></a-box><a-box position="-0.56 0.11 -0.38" width="0.25" height="0.16" depth="0.18" color="#e7ac41"></a-box>
-        </a-entity>
-        <a-entity class="area clickable" data-area="food" position="-1.55 0 0.4" geometry="primitive: sphere; radius: 0.72" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-box position="-0.5 0.24 -0.26" width="0.46" height="0.42" depth="0.28" color="#eda63e"></a-box><a-box position="0 0.24 0" width="0.46" height="0.42" depth="0.28" color="#d65c70"></a-box><a-box position="0.5 0.24 0.26" width="0.46" height="0.42" depth="0.28" color="#4e9d80"></a-box><a-box position="-0.5 0.49 -0.26" width="0.54" height="0.1" depth="0.34" color="#fff3d6"></a-box><a-box position="0 0.49 0" width="0.54" height="0.1" depth="0.34" color="#fff3d6"></a-box><a-box position="0.5 0.49 0.26" width="0.54" height="0.1" depth="0.34" color="#fff3d6"></a-box>
-        </a-entity>
-        <a-entity class="area clickable" data-area="toilets" position="1.95 0 0.92" geometry="primitive: sphere; radius: 0.72" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-box position="-0.5 0.28 -0.26" width="0.52" height="0.54" depth="0.34" color="#6bafd1"></a-box><a-box position="0 0.28 0" width="0.52" height="0.54" depth="0.34" color="#6ab2a5"></a-box><a-box position="0.5 0.28 0.26" width="0.52" height="0.54" depth="0.34" color="#6bafd1"></a-box><a-plane position="-0.5 0.28 0.18" width="0.18" height="0.3" color="#ffffff"></a-plane><a-plane position="0 0.28 0.18" width="0.18" height="0.3" color="#ffffff"></a-plane><a-plane position="0.5 0.28 0.44" width="0.18" height="0.3" color="#ffffff"></a-plane>
-        </a-entity>
-        <a-entity class="area clickable" data-area="support" position="-2 0 -0.65" geometry="primitive: sphere; radius: 0.72" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-cylinder position="0 0.3 0" radius="0.48" height="0.52" color="#b873a8"></a-cylinder><a-sphere position="0 0.66 0" radius="0.52" color="#efd3e9"></a-sphere><a-plane rotation="-90 0 0" position="-0.72 0.02 0.24" width="0.64" height="0.54" color="#9dca82"></a-plane><a-sphere position="-0.82 0.16 0.2" radius="0.14" color="#73ae6a"></a-sphere>
-        </a-entity>
-        <a-entity class="area clickable" data-area="green" position="0 0 -0.1" geometry="primitive: sphere; radius: 0.78" material="opacity: 0.01; transparent: true; depthWrite: false">
-          <a-plane rotation="-90 0 0" width="1.65" height="1.2" color="#479762"></a-plane><a-sphere position="-0.46 0.17 -0.28" radius="0.22" color="#9acd62"></a-sphere><a-sphere position="0.4 0.17 -0.18" radius="0.22" color="#5db176"></a-sphere><a-box position="-0.44 0.15 0.4" width="0.54" height="0.12" depth="0.18" color="#b77e48"></a-box><a-box position="0.45 0.15 0.36" width="0.54" height="0.12" depth="0.18" color="#b77e48"></a-box><a-sphere position="0 0.15 0.08" radius="0.12" color="#f6d35c"></a-sphere>
-        </a-entity>
-      </a-marker>
-      <a-entity camera cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
-    </a-scene>
-    <script src="app.js?v=marker-ar-1"></script>
+    <main>
+      <video id="camera-feed" muted playsinline></video>
+      <div id="ui" aria-live="polite">
+        <article id="story-card" hidden>
+          <h2 id="story-title"></h2>
+          <p id="story-text"></p>
+        </article>
+        <p id="status">Tap the button and allow camera access.</p>
+        <button id="start-camera" type="button">Start camera AR</button>
+        <button id="enable-direction" type="button" hidden>Enable direction</button>
+      </div>
+    </main>
+    <script src="sketch.js?v=eight-areas-1"></script>
   </body>
 </html>
