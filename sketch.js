@@ -9,6 +9,7 @@ const startButton = document.querySelector('#start-camera');
 const statusText = document.querySelector('#status');
 
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
+startButton.addEventListener('touchend', beginCameraRequest, { passive: false });
 startButton.addEventListener('click', beginCameraRequest);
 
 function beginCameraRequest(event) {
@@ -26,7 +27,8 @@ function beginCameraRequest(event) {
 
 function setup() {
   pixelDensity(1);
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  const canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  canvas.elt.addEventListener('pointerdown', moveModel);
 }
 
 function draw() {
@@ -150,18 +152,18 @@ function drawLabel() {
 }
 
 function mousePressed() {
-  if (cameraReady) {
-    modelX = mouseX - width / 2;
-    modelY = mouseY - height / 2;
-  }
+  moveModel();
 }
 
-function touchStarted() {
-  if (cameraReady && touches.length > 0) {
-    modelX = touches[0].x - width / 2;
-    modelY = touches[0].y - height / 2;
+function moveModel(event) {
+  if (!cameraReady) {
+    return;
   }
-  return false;
+
+  const x = event?.clientX ?? mouseX;
+  const y = event?.clientY ?? mouseY;
+  modelX = x - width / 2;
+  modelY = y - height / 2;
 }
 
 function windowResized() {
