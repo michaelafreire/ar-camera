@@ -1,16 +1,22 @@
 let cameraVideo = document.querySelector('#camera-feed');
 let cameraReady = false;
-let modelX = 0;
-let modelY = 18;
-let modelScale = 1;
 let cameraRequestActive = false;
+let directionRequestActive = false;
+let directionEnabled = false;
+let referenceHeading;
+let activeScene = 0;
 
 const startButton = document.querySelector('#start-camera');
+const directionButton = document.querySelector('#enable-direction');
 const statusText = document.querySelector('#status');
+const sceneNames = ['Welcome', 'Learning', 'Community', 'Garden'];
 
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
 startButton.addEventListener('touchend', beginCameraRequest, { passive: false });
 startButton.addEventListener('click', beginCameraRequest);
+directionButton.addEventListener('pointerdown', beginDirectionRequest, { passive: false });
+directionButton.addEventListener('touchend', beginDirectionRequest, { passive: false });
+directionButton.addEventListener('click', beginDirectionRequest);
 
 function beginCameraRequest(event) {
   event.preventDefault();
@@ -27,8 +33,7 @@ function beginCameraRequest(event) {
 
 function setup() {
   pixelDensity(1);
-  const canvas = createCanvas(windowWidth, windowHeight, WEBGL);
-  canvas.elt.addEventListener('pointerdown', moveModel);
+  createCanvas(windowWidth, windowHeight, WEBGL);
 }
 
 function draw() {
@@ -72,7 +77,8 @@ async function startCamera() {
     cameraReady = true;
     cameraVideo.classList.add('visible');
     startButton.hidden = true;
-    statusText.textContent = 'Tap anywhere to move the model.';
+    directionButton.hidden = false;
+    statusText.textContent = 'Enable direction, then turn your body to explore the school.';
   } catch (error) {
     startButton.disabled = false;
     startButton.textContent = 'Try camera again';
@@ -81,6 +87,74 @@ async function startCamera() {
       : 'The camera could not start. Open this link directly in Safari or Chrome and try again.';
   }
 }
+
+function beginDirectionRequest(event) {
+  event.preventDefault();
+
+  if (directionRequestActive || directionEnabled) {
+    return;
+  }
+
+  directionRequestActive = true;
+  enableDirection().finally(() => {
+    directionRequestActive = false;
+  });
+}
+
+async function enableDirection() {
+  directionButton.disabled = true;
+  directionButton.textContent = 'Enabling direction…';
+
+  try {
+    if (typeof DeviceOrientationEvent !== 'undefined'
+      && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      const permission = await DeviceOrientationEvent.requestPermission();
+      if (permission !== 'granted') {
+        throw new Error('Direction permission was not granted.');
+      }
+    }
+
+    window.addEventListener('deviceorientation', updateDirection, true);
+    directionEnabled = true;
+    directionButton.hidden = true;
+    statusText.textContent = 'Face your starting direction for Welcome. Turn right for Learning.';
+  } catch (error) {
+    directionButton.disabled = false;
+    directionButton.textContent = 'Try direction again';
+    statusText.textContent = 'Direction access is needed to explore. Allow Motion & Orientation, then try again.';
+  }
+}
+
+function updateDirection(event) {
+  const heading = Number.isFinite(event.webkitCompassHeading)
+    ? event.webkitCompassHeading
+    : Number.isFinite(event.alpha)
+      ? (360 - event.alpha) % 360
+      : null;
+
+  if (heading === null) {
+    return;
+  }
+
+  if (referenceHeading === undefined) {
+    referenceHeading = heading;
+  }
+
+  const relativeHeading = (heading - referenceHeading + 360) % 360;
+  const nextScene = Math.floor((relativeHeading + 45) / 90) % 4;
+
+  if (nextScene !== activeScene) {
+    activeScene = nextScene;
+    statusText.textContent = sceneInstructions[activeScene];
+  }
+}
+
+const sceneInstructions = [
+  'Welcome: face your starting direction.',
+  'Learning: turn right to see shared learning spaces.',
+  'Community: turn around to see the community circle.',
+  'Garden: turn left to see the wellbeing garden.'
+];
 
 function drawWelcome() {
   push();
@@ -96,27 +170,53 @@ function drawWelcome() {
 
 function drawModel() {
   push();
-  translate(modelX, modelY + 20, 0);
-  scale(modelScale * 0.82);
+  translate(0, 22, 0);
+  scale(0.88);
   rotateX(-0.12);
-  rotateY(frameCount * 0.008);
   noStroke();
   ambientLight(155);
   directionalLight(255, 220, 235, -0.5, -0.8, -1);
 
   drawCampusBase();
-  drawWelcomeGate(-92, 60);
-  drawLearningStudio(-58, -40, 78, 52, 34, color(62, 131, 190));
-  drawLearningStudio(66, -40, 76, 52, 34, color(156, 60, 98));
-  drawSharedGarden(0, 15);
-  drawCommunityCircle(0, 57);
 
-  drawPerson(-94, 25, color(255, 186, 55));
-  drawPerson(-40, -5, color(246, 135, 183));
-  drawPerson(25, 12, color(255, 186, 55));
-  drawPerson(88, 22, color(246, 135, 183));
-  drawPerson(48, -67, color(255, 186, 55));
+  if (activeScene === 0) {
+    drawWelcomeScene();
+  } else if (activeScene === 1) {
+    drawLearningScene();
+  } else if (activeScene === 2) {
+    drawCommunityScene();
+  } else {
+    drawGardenScene();
+  }
   pop();
+}
+
+function drawWelcomeScene() {
+  drawWelcomeGate(0, 20);
+  drawSharedGarden(-72, -28);
+  drawPerson(-27, 8, color(255, 186, 55));
+  drawPerson(28, 10, color(246, 135, 183));
+}
+
+function drawLearningScene() {
+  drawLearningStudio(0, -8, 126, 74, 42, color(62, 131, 190));
+  drawPerson(-45, 34, color(255, 186, 55));
+  drawPerson(0, 34, color(246, 135, 183));
+  drawPerson(45, 34, color(255, 186, 55));
+}
+
+function drawCommunityScene() {
+  drawCommunityCircle(0, 5);
+  drawPerson(-52, 0, color(246, 135, 183));
+  drawPerson(52, 0, color(255, 186, 55));
+  drawLearningStudio(0, -48, 100, 32, 22, color(156, 60, 98));
+}
+
+function drawGardenScene() {
+  drawSharedGarden(0, 5);
+  drawWelcomeGate(82, 44);
+  drawPerson(-50, 24, color(255, 186, 55));
+  drawPerson(48, -24, color(246, 135, 183));
 }
 
 function drawCampusBase() {
@@ -236,26 +336,11 @@ function drawLabel() {
   translate(-width / 2, -height / 2);
   noStroke();
   fill(0, 120);
-  rect(12, 12, 175, 34, 8);
+  rect(12, 12, 245, 34, 8);
   fill(255);
   textSize(14);
-  text('Camera AR mode', 24, 34);
+  text(`School journey: ${sceneNames[activeScene]}`, 24, 34);
   pop();
-}
-
-function mousePressed() {
-  moveModel();
-}
-
-function moveModel(event) {
-  if (!cameraReady) {
-    return;
-  }
-
-  const x = event?.clientX ?? mouseX;
-  const y = event?.clientY ?? mouseY;
-  modelX = x - width / 2;
-  modelY = y - height / 2;
 }
 
 function windowResized() {

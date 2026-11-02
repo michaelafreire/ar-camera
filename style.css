@@ -64,7 +64,8 @@ canvas {
   line-height: 1.35;
 }
 
-#start-camera {
+#start-camera,
+#enable-direction {
   pointer-events: auto;
   touch-action: manipulation;
   border: 0;
@@ -78,6 +79,7 @@ canvas {
   box-shadow: 0 8px 26px rgb(0 0 0 / 35%);
 }
 
-#start-camera:disabled {
+#start-camera:disabled,
+#enable-direction:disabled {
   opacity: 0.7;
 }
