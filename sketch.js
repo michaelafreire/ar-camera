@@ -9,7 +9,32 @@ let activeScene = 0;
 const startButton = document.querySelector('#start-camera');
 const directionButton = document.querySelector('#enable-direction');
 const statusText = document.querySelector('#status');
+const storyCard = document.querySelector('#story-card');
+const storyTitle = document.querySelector('#story-title');
+const storyText = document.querySelector('#story-text');
 const sceneNames = ['Welcome', 'Learning', 'Community', 'Garden'];
+const stories = {
+  welcome: {
+    title: 'Welcome',
+    text: 'The entrance makes belonging visible from the first moment: every learner is greeted, noticed, and invited in.'
+  },
+  garden: {
+    title: 'Wellbeing Garden',
+    text: 'The garden is a calm shared space for conversation, reflection, play, and connection with nature.'
+  },
+  learning: {
+    title: 'Learning Together',
+    text: 'These flexible learning studios support collaboration, creativity, and many different ways to learn.'
+  },
+  community: {
+    title: 'Community Circle',
+    text: 'The circle gives every person a place to listen, speak, make decisions, and feel part of the school.'
+  },
+  participation: {
+    title: 'Everyone Takes Part',
+    text: 'The colourful figures represent learners, families, and staff shaping school life together.'
+  }
+};
 
 startButton.addEventListener('pointerdown', beginCameraRequest, { passive: false });
 startButton.addEventListener('touchend', beginCameraRequest, { passive: false });
@@ -31,7 +56,8 @@ function beginCameraRequest(event) {
 
 function setup() {
   pixelDensity(1);
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  const canvas = createCanvas(windowWidth, windowHeight, WEBGL);
+  canvas.elt.addEventListener('pointerdown', handleModelTap);
 }
 
 function draw() {
@@ -116,7 +142,7 @@ async function enableDirection() {
     window.addEventListener('deviceorientation', updateDirection, true);
     directionEnabled = true;
     directionButton.hidden = true;
-    statusText.textContent = 'Face your starting direction for Welcome. Turn right for Learning.';
+    statusText.textContent = 'Turn to explore, then tap a coloured part of the model to hear its story.';
   } catch (error) {
     directionButton.disabled = false;
     directionButton.textContent = 'Try direction again';
@@ -145,6 +171,41 @@ function updateDirection(event) {
   if (nextScene !== activeScene) {
     activeScene = nextScene;
     statusText.textContent = sceneInstructions[activeScene];
+  }
+}
+
+function handleModelTap(event) {
+  if (!cameraReady || !directionEnabled) {
+    return;
+  }
+
+  const horizontalPosition = event.clientX / window.innerWidth;
+  let storyKey = 'welcome';
+
+  if (activeScene === 0) {
+    storyKey = horizontalPosition < 0.4 ? 'garden' : 'welcome';
+  } else if (activeScene === 1) {
+    storyKey = horizontalPosition > 0.7 ? 'participation' : 'learning';
+  } else if (activeScene === 2) {
+    storyKey = horizontalPosition < 0.28 || horizontalPosition > 0.72 ? 'participation' : 'community';
+  } else {
+    storyKey = horizontalPosition > 0.68 ? 'welcome' : 'garden';
+  }
+
+  presentStory(storyKey);
+}
+
+function presentStory(storyKey) {
+  const story = stories[storyKey];
+  storyTitle.textContent = story.title;
+  storyText.textContent = story.text;
+  storyCard.hidden = false;
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const narration = new SpeechSynthesisUtterance(`${story.title}. ${story.text}`);
+    narration.rate = 0.92;
+    window.speechSynthesis.speak(narration);
   }
 }
 

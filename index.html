@@ -12,11 +12,15 @@
     <main>
       <video id="camera-feed" muted playsinline></video>
       <div id="ui" aria-live="polite">
+        <article id="story-card" hidden>
+          <h2 id="story-title"></h2>
+          <p id="story-text"></p>
+        </article>
         <p id="status">Tap the button and allow camera access.</p>
         <button id="start-camera" type="button">Start camera AR</button>
         <button id="enable-direction" type="button" hidden>Enable direction</button>
       </div>
     </main>
-    <script src="sketch.js?v=direction-journey-2"></script>
+    <script src="sketch.js?v=interactive-stories-1"></script>
   </body>
 </html>

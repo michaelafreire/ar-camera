@@ -64,6 +64,31 @@ canvas {
   line-height: 1.35;
 }
 
+#story-card {
+  position: fixed;
+  top: calc(20px + env(safe-area-inset-top));
+  left: 20px;
+  right: 20px;
+  max-width: 390px;
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgb(0 0 0 / 68%);
+  color: white;
+}
+
+#story-card h2 {
+  margin: 0 0 6px;
+  color: #ffcc66;
+  font-size: 18px;
+}
+
+#story-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 #start-camera,
 #enable-direction {
   pointer-events: auto;
