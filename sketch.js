@@ -277,41 +277,47 @@ function drawModel() {
 }
 
 function drawWelcomeScene() {
-  drawWelcomeGate(0, 20);
-  drawSharedGarden(-72, -28);
-  drawPerson(-27, 8, color(255, 186, 55));
-  drawPerson(28, 10, color(246, 135, 183));
+  drawWelcomeGate(0, 78);
+  drawSharedGarden(-106, -54);
+  drawReadingNook(94, -45);
+  drawPerson(-28, 66, color(255, 186, 55));
+  drawPerson(30, 72, color(246, 135, 183));
 }
 
 function drawLearningScene() {
-  drawLearningStudio(0, -8, 126, 74, 42, color(62, 131, 190));
-  drawPerson(-45, 34, color(255, 186, 55));
-  drawPerson(0, 34, color(246, 135, 183));
-  drawPerson(45, 34, color(255, 186, 55));
+  drawLearningStudio(0, -72, 132, 70, 46, color(62, 131, 190));
+  drawReadingNook(-104, 48);
+  drawCommunityCircle(86, 58);
+  drawPerson(-44, 78, color(255, 186, 55));
+  drawPerson(8, 88, color(246, 135, 183));
+  drawPerson(50, 72, color(255, 186, 55));
 }
 
 function drawCommunityScene() {
-  drawCommunityCircle(0, 5);
-  drawPerson(-52, 0, color(246, 135, 183));
-  drawPerson(52, 0, color(255, 186, 55));
-  drawLearningStudio(0, -48, 100, 32, 22, color(156, 60, 98));
+  drawLearningStudio(0, -96, 112, 34, 24, color(156, 60, 98));
+  drawQuietPod(-105, -42);
+  drawCommunityCircle(0, 24);
+  drawPerson(-62, 86, color(246, 135, 183));
+  drawPerson(62, 86, color(255, 186, 55));
 }
 
 function drawGardenScene() {
-  drawSharedGarden(0, 5);
-  drawWelcomeGate(82, 44);
-  drawPerson(-50, 24, color(255, 186, 55));
-  drawPerson(48, -24, color(246, 135, 183));
+  drawQuietPod(98, -58);
+  drawSharedGarden(0, -12);
+  drawPond(-112, 32);
+  drawWelcomeGate(114, 76);
+  drawPerson(-50, 84, color(255, 186, 55));
+  drawPerson(48, 64, color(246, 135, 183));
 }
 
 function drawCampusBase() {
   push();
   fill(248, 245, 235);
-  box(260, 10, 185);
+  box(330, 10, 245);
 
   fill(221, 217, 202);
-  translate(0, -7, 28);
-  box(208, 2, 20);
+  translate(0, -7, 42);
+  box(270, 2, 18);
   pop();
 }
 
@@ -372,6 +378,54 @@ function drawSharedGarden(x, z) {
   fill(238, 202, 83);
   translate(0, -5, 0);
   cylinder(14, 3, 20, 1);
+  pop();
+}
+
+function drawReadingNook(x, z) {
+  push();
+  translate(x, -8, z);
+  fill(242, 225, 184);
+  box(55, 6, 38);
+
+  fill(159, 91, 53);
+  translate(-17, -25, -8);
+  box(10, 42, 8);
+  translate(34, 0, 0);
+  box(10, 42, 8);
+
+  fill(245, 246, 239);
+  translate(-17, -18, -7);
+  box(9, 5, 12);
+  translate(34, 0, 0);
+  box(9, 5, 12);
+
+  fill(231, 172, 65);
+  translate(-8, -10, 8);
+  box(22, 8, 16);
+  pop();
+}
+
+function drawQuietPod(x, z) {
+  push();
+  translate(x, -25, z);
+  fill(184, 115, 168);
+  cylinder(24, 42, 20, 1);
+  translate(0, -29, 0);
+  fill(238, 210, 234);
+  sphere(27, 20, 12);
+  pop();
+}
+
+function drawPond(x, z) {
+  push();
+  translate(x, -8, z);
+  fill(75, 174, 210);
+  cylinder(30, 4, 30, 1);
+  fill(129, 193, 83);
+  translate(16, -5, 3);
+  sphere(9, 12, 8);
+  translate(-27, 0, -12);
+  sphere(7, 12, 8);
   pop();
 }
 
